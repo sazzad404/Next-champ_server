@@ -161,7 +161,19 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/contests/:id", async (req, res) => {
+      const { id } = req.params;
+      const updatedContest = req.body;
+      const now = new Date();
+      const localTimeString = now.toLocaleString();
+      updatedContest.updatedTime = localTimeString;
 
+      const query = { _id: new ObjectId(id) };
+
+      const exists = await contestCollection.findOne({
+        _id: new ObjectId(id),
+        "participants.email": updatedContest.email,
+      });
 
       if (exists) {
         return res.send({ message: "Already added" });
