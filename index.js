@@ -149,7 +149,17 @@ async function run() {
       res.send(result);
     });
 
-
+    app.post("/contests", async (req, res) => {
+      const contest = req.body;
+      const now = new Date();
+      const localTimeString = now.toLocaleString();
+      contest.createdAt = localTimeString;
+      contest.status = "pending";
+      contest.participants = [];
+      contest.paymentStatus = "unpaid";
+      const result = await contestCollection.insertOne(contest);
+      res.send(result);
+    });
 
     app.put("/contests/:id", async (req, res) => {
       const { id } = req.params;
