@@ -84,20 +84,7 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const roleInfo = req.body;
-      const query = { _id: new ObjectId(id) };
 
-      const updatedDoc = {
-        $set: {
-          role: roleInfo.role,
-        },
-      };
-
-      const result = await userCollection.updateOne(query, updatedDoc);
-      res.send(result);
-    });
 
     ////////////////////CONTEST APIS HERE///////////////////////
     app.get("/contests", verifyFBToken, async (req, res) => {
