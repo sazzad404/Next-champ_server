@@ -7,7 +7,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const admin = require("firebase-admin");
 
-const serviceAccount = require("./firebaseadmin.json");
+const serviceAccount = require("./firebase-admin.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
