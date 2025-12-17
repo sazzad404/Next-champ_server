@@ -98,7 +98,7 @@ async function run() {
     });
 
     ////////////////////CONTEST APIS HERE///////////////////////
-    app.get("/contests", verifyFBToken, async (req, res) => {
+    app.get("/contests", async (req, res) => {
       const creatorEmail = req.query.creatorEmail;
       const limit = parseInt(req.query.limit);
       const search = req.query.search;
@@ -106,11 +106,6 @@ async function run() {
       const query = {};
       if (creatorEmail) {
         query.creatorEmail = creatorEmail;
-
-        //check email adress
-        if (creatorEmail !== req.decoded_email) {
-          return res.status(403).send({ message: "forbidden access" });
-        }
       }
 
       if (search) {
@@ -156,6 +151,20 @@ async function run() {
       contest.participants = [];
       contest.paymentStatus = "unpaid";
       const result = await contestCollection.insertOne(contest);
+      res.send(result);
+    });
+
+    app.get("/my-contests", verifyFBToken, async (req, res) => {
+      const { creatorEmail } = req.query;
+
+      const query = creatorEmail ? { creatorEmail } : {};
+
+      const result = await contestCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.get("/my-winnings-contest", verifyFBToken, async (req, res) => {
+      const result = await contestCollection.find({}).toArray();
       res.send(result);
     });
 
@@ -226,7 +235,7 @@ async function run() {
     });
 
     /////////////////////My participations api/////////////////
-    app.get("/my-participation/:email", async (req, res) => {
+    app.get("/my-participation/:email", verifyFBToken, async (req, res) => {
       const email = req.params.email;
 
       const result = await contestCollection
