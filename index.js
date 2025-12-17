@@ -13,7 +13,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-
 //middleware
 app.use(express.json());
 app.use(cors());
@@ -25,13 +24,12 @@ const verifyFBToken = async (req, res, next) => {
     return res.status(401).send({ message: "unathorized access" });
   }
   try {
-    const idToken = token.split(' ')[1];
-    const decoded= await admin.auth().verifyIdToken(idToken)
-    console.log("decoded in the token",decoded);
+    const idToken = token.split(" ")[1];
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    console.log("decoded in the token", decoded);
     req.decoded_email = decoded.email;
-    
   } catch (error) {
-    return res.status(401).send({message: 'unauthorized access'})
+    return res.status(401).send({ message: "unauthorized access" });
   }
 
   next();
@@ -110,8 +108,8 @@ async function run() {
         query.creatorEmail = creatorEmail;
 
         //check email adress
-        if(creatorEmail !== req.decoded_email){
-          return res.status(403).send({message: 'forbidden access'})
+        if (creatorEmail !== req.decoded_email) {
+          return res.status(403).send({ message: "forbidden access" });
         }
       }
 
@@ -361,9 +359,7 @@ async function run() {
     });
 
     await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment!"
-    );
+    console.log("Pinged your deployment!");
   } finally {
   }
 }
